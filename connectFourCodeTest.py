@@ -3,38 +3,29 @@
 import json
 import random
 
-num = 0
 
-egBoard = ""
-for counter in range(42):
-    egBoard += "-"
+def replacer(s, newstring, index, nofail=False):
+    # raise an error if index is outside of the string
+    if not nofail and index not in range(len(s)):
+        raise ValueError("index outside given string")
 
-print(egBoard)
-print(len(egBoard))
-
-
-def randomBoard() -> str:
-    return ""
-    # new game
+    # if not erroring, but the index is still not in the correct range..
+    if index < 0:  # add it to the beginning
+        return newstring + s
+    if index > len(s):  # add it to the end
+        return s + newstring
 
 
-def newGame(num):
-    num += 1
-    the_dictionary = {'ID': num}  # ID: num
-    return json.dumps(the_dictionary)
+def nextMove(player, state):
 
-
-def nextMove(gameID, oppCol, state):
-
-    s = state
     randNum = random.randint(0, 6)
     success = False
     currentPos = randNum
 
     numIterations = 0
 
-    player = s.split('#')[0]
-    board = s.split('#')[1]
+    player = player
+    board = state
 
     while not success or numIterations < 7:
         if board[currentPos] != "-":
@@ -47,9 +38,24 @@ def nextMove(gameID, oppCol, state):
                     currentPos = 0
         else:
             success = True
-            board[currentPos] = player
+            replacer(board, currentPos, player)
 
-    if success == False:
-        print("No legal moves available")
+    return board
 
-    return json.dumps({'ID': gameID, 'Col': randNum, 'State': board})
+
+def randomBoard():
+    egBoard = ""
+    for i in range(42):
+        egBoard += "-"
+    numMoves = random.randint(0, 41)
+    players = ["X", "O"]
+    for c in range(numMoves):
+        player = players[c % 2]
+        egBoard = nextMove(player, egBoard)
+
+    return egBoard
+
+    # new game
+
+
+print(randomBoard())
