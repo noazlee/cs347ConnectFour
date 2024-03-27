@@ -1,57 +1,58 @@
-# This is a very simple program to test that the Flask and JSON packages are correctly installed
+#! /usr/bin/python
+# A simple API endpoint to be used for a game of connect4
 
-import flask
-import json
-import random
+import flask, random
 
 app = flask.Flask(__name__)
 
-#new game
+# Store a list of existing games
+existing_games = {}
+
+# New game
 @app.route('/newgame/<player>')
 def newGame(player):
-    the_dictionary = {'ID': '2387'} # ID: num 
-    return flask.jsonify(the_dictionary)
+    waiting = True
+    while waiting:
+        newID = random.randint(1000, 2000)
+        if newID not in existing_games:
+            existing_games[newID] = player
+            return flask.jsonify({
+                'ID': newID
+            })
 
-# Read in current game state
-# Decide what move to make - random number and then dont do illegal move
-# Return game state
-
-#existing game
+# Existing game
 @app.route('/nextmove/<gameID>/<oppCol>/<state>')
 def nextMove(gameID, oppCol, state):
     
-    s = state
     randNum = random.randint(0,6)
-    success = False
     currentPos = randNum
-
-    numIterations = 0
+    tries = 1
 
     player = state.split('#')[0]
     board = state.split('#')[1]
 
-    while not success or numIterations < 7:
-        if currentPos > 41:
-            numIterations += 1
-            randNum += 1
-            currentPos = randNum
-            if currentPos > 6:
-                currentPos = 0
-
-        if board[currentPos] != "-":
-            currentPos += 7
-        else:
-            success = True
+    success = False
+    while not success:
+        if currentPos + 7 > 41:
             board = board[:currentPos] + player + board[currentPos + 1:]
+            success = True
+            break
+        elif board[currentPos + 7] == '-':
+            currentPos += 7
+        elif board[currentPos] != '-':
+            randNum = (randNum + 1) % 7
+            currentPos = randNum
+            tries += 1
+        else:
+            board = board[:currentPos] + player + board[currentPos + 1:]
+            success = True
 
-    if success == False:
-        print("No legal moves available")
+        if tries > 7:
+            return flask.jsonify({
+                "error": "no_valid_move"
+            })
 
     return flask.jsonify({'ID': gameID, 'Col': randNum, 'State': board})
 
-
-
 if __name__ == '__main__':
-    host = '0.0.0.0'
-    port = 5127
-    app.run(host=host, port=port, debug=True)
+    app.run(host = '0.0.0.0', port = 5127, debug=True)
