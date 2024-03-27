@@ -4,58 +4,64 @@ import json
 import random
 
 
-def replacer(s, newstring, index, nofail=False):
-    # raise an error if index is outside of the string
-    if not nofail and index not in range(len(s)):
-        raise ValueError("index outside given string")
-
-    # if not erroring, but the index is still not in the correct range..
-    if index < 0:  # add it to the beginning
-        return newstring + s
-    if index > len(s):  # add it to the end
-        return s + newstring
+def replacer(s, index, newstring):
+    return s[:index] + newstring + s[index+1:]
 
 
 def nextMove(player, state):
-
-    randNum = random.randint(0, 6)
-    success = False
-    currentPos = randNum
-
-    numIterations = 0
-
-    player = player
     board = state
 
-    while not success or numIterations < 7:
-        if board[currentPos] != "-":
-            currentPos += 7
-            if currentPos > 42:
-                numIterations += 1
-                randNum += 1
-                currentPos = randNum
-                if currentPos > 6:
-                    currentPos = 0
-        else:
+    columns = [board[i::7] for i in range(7)]  # 2D ARRAY
+
+    success = False
+    numTries = 0
+    while not success or numTries > 30:
+        randCol = random.randint(0, 6)  # Select a random column
+        column = columns[randCol]
+        # Find the first empty slot from the bottom of the column
+        emptySlot = column.find('-')
+        if emptySlot != -1:
+            # Calculate the index in the string
+            index = emptySlot * 7 + randCol
+            board = replacer(board, index, player)
             success = True
-            replacer(board, currentPos, player)
+        else:
+            # If the selected column is full, try another one
+            numTries += 1
+            continue
 
     return board
 
 
 def randomBoard():
-    egBoard = ""
-    for i in range(42):
-        egBoard += "-"
+    egBoard = "-" * 42  # Initialize an empty board
     numMoves = random.randint(0, 41)
     players = ["X", "O"]
-    for c in range(numMoves):
-        player = players[c % 2]
+    for i in range(numMoves):
+        player = players[i % 2]
         egBoard = nextMove(player, egBoard)
 
     return egBoard
 
-    # new game
+
+# new game
+newBoard = randomBoard()
+
+print(newBoard)
 
 
-print(randomBoard())
+def layOutCorrectly(board):
+    newBoard = [[] for i in range(6)]
+    counter = 0
+    numRows = 6
+    for i in range(len(board)):
+        # Fill rows from bottom to top
+        newBoard[numRows - 1 - (i // 7)].append(board[i])
+        counter += 1
+        if counter == 7:
+            counter = 0  # Reset counter after every 7 elements
+
+    return newBoard
+
+
+print(layOutCorrectly(newBoard))
