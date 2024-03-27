@@ -1,4 +1,4 @@
-# This is a very simple program to test that the Flask and JSON packages are correctly installed
+# This code will generate a random, legal connect four table to test our flask app.
 
 import json
 import random
@@ -10,8 +10,14 @@ def replacer(s, index, newstring):
 
 def nextMove(player, state):
     board = state
+    columns = []
 
-    columns = [board[i::7] for i in range(7)]  # 2D ARRAY
+    for i in range(7):  # 7 columns
+        column = ''
+        for j in range(6):  # 6 rows
+            index = j * 7 + i
+            column += board[index]
+        columns.append(column)
 
     success = False
     numTries = 0

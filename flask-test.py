@@ -7,6 +7,10 @@ app = flask.Flask(__name__)
 # New game
 
 
+def replacer(s, index, newstring):
+    return s[:index] + newstring + s[index+1:]
+
+
 @app.route('/newgame/<player>')
 def newGame(player):
     the_dictionary = {'ID': '2387'}  # ID: num
@@ -23,30 +27,35 @@ def nextMove(gameID, oppCol, state):
     player = state.split('#')[0]
     board = state.split('#')[1]
 
-    # Decide next move (currently random column)
-    randNum = random.randint(0, 6)
+    columns = []
+
+    for i in range(7):  # There are 7 columns in Connect Four
+        column = ''
+        for j in range(6):  # There are 6 rows in Connect Four
+            index = j * 7 + i
+            column += board[index]
+        columns.append(column)
+
     success = False
-    currentPos = randNum
-    numIterations = 0
-    while not success and numIterations < 7:
-        if currentPos > 41:
-            numIterations += 1
-            randNum += 1
-            currentPos = randNum
-            if currentPos > 6:
-                currentPos = 0
+    numTries = 0
 
-        if board[currentPos] != "-":
-            currentPos += 7
-        else:
+    while not success or numTries > 30:
+        randCol = random.randint(0, 6)  # Select a random column
+        column = columns[randCol]
+        # Find the first empty slot from the bottom of the column
+        emptySlot = column.find('-')
+        if emptySlot != -1:
+            # Calculate the index in the string
+            index = emptySlot * 7 + randCol
+            board = replacer(board, index, player)
             success = True
-            board = board[:currentPos] + player + board[currentPos + 1:]
-
-    if success == False:
-        print("No legal moves available")
+        else:
+            # If the selected column is full, try another one
+            numTries += 1
+            continue
 
     # Return new board state
-    return flask.jsonify({'ID': gameID, 'Col': randNum, 'State': board})
+    return flask.jsonify({'ID': gameID, 'Col': randCol, 'State': board})
 
 
 if __name__ == '__main__':
