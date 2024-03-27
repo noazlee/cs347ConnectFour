@@ -7,23 +7,27 @@ import random
 app = flask.Flask(__name__)
 num = 0
 
-#new game
+# new game
+
+
 @app.route('/newgame/<player>')
-def newGame(num):
+def newGame(num, player):
     num += 1
-    the_dictionary = {'ID': num} # ID: num 
+    the_dictionary = {'ID': num}  # ID: num
     return json.dumps(the_dictionary)
 
 # Read in current game state
 # Decide what move to make - random number and then dont do illegal move
 # Return game state
 
-#existing game
+# existing game
+
+
 @app.route('/nextmove/<gameID>/<oppCol>/<state>')
 def nextMove(gameID, oppCol, state):
-    
+
     s = state
-    randNum = random.randint(0,6)
+    randNum = random.randint(0, 6)
     success = False
     currentPos = randNum
 
@@ -38,7 +42,7 @@ def nextMove(gameID, oppCol, state):
             if currentPos > 42:
                 numIterations += 1
                 randNum += 1
-                currentPos = randNum 
+                currentPos = randNum
                 if currentPos > 6:
                     currentPos = 0
         else:
@@ -49,7 +53,6 @@ def nextMove(gameID, oppCol, state):
         print("No legal moves available")
 
     return json.dumps({'ID': gameID, 'Col': randNum, 'State': board})
-
 
 
 if __name__ == '__main__':
