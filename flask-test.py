@@ -5,14 +5,12 @@ import json
 import random
 
 app = flask.Flask(__name__)
-num = 0
 
 #new game
 @app.route('/newgame/<player>')
-def newGame(num):
-    num += 1
-    the_dictionary = {'ID': num} # ID: num 
-    return json.dumps(the_dictionary)
+def newGame(player):
+    the_dictionary = {'ID': '2387'} # ID: num 
+    return flask.jsonify(the_dictionary)
 
 # Read in current game state
 # Decide what move to make - random number and then dont do illegal move
@@ -29,26 +27,27 @@ def nextMove(gameID, oppCol, state):
 
     numIterations = 0
 
-    player = s.split('#')[0]
-    board = s.split('#')[1]
+    player = state.split('#')[0]
+    board = state.split('#')[1]
 
     while not success or numIterations < 7:
+        if currentPos > 41:
+            numIterations += 1
+            randNum += 1
+            currentPos = randNum
+            if currentPos > 6:
+                currentPos = 0
+
         if board[currentPos] != "-":
             currentPos += 7
-            if currentPos > 42:
-                numIterations += 1
-                randNum += 1
-                currentPos = randNum 
-                if currentPos > 6:
-                    currentPos = 0
         else:
             success = True
-            board[currentPos] = player
+            board = board[:currentPos] + player + board[currentPos + 1:]
 
     if success == False:
         print("No legal moves available")
 
-    return json.dumps({'ID': gameID, 'Col': randNum, 'State': board})
+    return flask.jsonify({'ID': gameID, 'Col': randNum, 'State': board})
 
 
 
