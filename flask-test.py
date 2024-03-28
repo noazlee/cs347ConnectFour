@@ -5,6 +5,7 @@ import random
 app = flask.Flask(__name__)
 
 # New game
+theDict = {}  # id  : player
 
 
 def replacer(s, index, newstring):
@@ -13,6 +14,8 @@ def replacer(s, index, newstring):
 
 @app.route('/newgame/<player>')
 def newGame(player):
+    global theDict
+    theDict[2387] = player
     the_dictionary = {'ID': '2387'}  # ID: num
     return flask.jsonify(the_dictionary)
 
@@ -59,6 +62,6 @@ def nextMove(gameID, oppCol, state):
 
 
 if __name__ == '__main__':
-    host = 'localhost'
+    host = '0.0.0.0'
     port = 5127
     app.run(host=host, port=port, debug=True)
