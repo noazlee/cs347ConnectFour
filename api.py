@@ -42,9 +42,10 @@ def newGame(player):
 
 
 @app.route('/nextmove/<gameID>/<oppCol>/<state>')
-def nextMove(ID, oppCol, player, state):
+def nextMove(gameID, oppCol, player, state):
     board = state
-    id = id
+    id = gameID
+    oC = oppCol
     columns = []
 
     for i in range(7):  # 7 columns
