@@ -1,14 +1,32 @@
 #! /usr/bin/python
 # A simple API endpoint to be used for a game of connect4
 
-import flask, random
+import flask
+import random
 
 app = flask.Flask(__name__)
 
 # Store a list of existing games
 existing_games = {}
 
+
+def replacer(s, index, newstring):
+    return s[:index] + newstring + s[index+1:]
+
+
+def randomBoard():
+    egBoard = "-" * 42  # Initialize an empty board
+    numMoves = random.randint(0, 41)
+    players = ["X", "O"]
+    for i in range(numMoves):
+        player = players[i % 2]
+        egBoard = nextMove(player, egBoard)
+
+    return egBoard
+
 # New game
+
+
 @app.route('/newgame/<player>')
 def newGame(player):
     waiting = True
@@ -21,38 +39,40 @@ def newGame(player):
             })
 
 # Existing game
-@app.route('/nextmove/<gameID>/<oppCol>/<state>')
-def nextMove(gameID, oppCol, state):
-    
-    randNum = random.randint(0,6)
-    currentPos = randNum
-    tries = 1
 
-    player = state.split('#')[0]
-    board = state.split('#')[1]
+
+@app.route('/nextmove/<gameID>/<oppCol>/<state>')
+def nextMove(ID, oppCol, player, state):
+    board = state
+    id = id
+    columns = []
+
+    for i in range(7):  # 7 columns
+        column = ''
+        for j in range(6):  # 6 rows
+            index = j * 7 + i
+            column += board[index]
+        columns.append(column)
 
     success = False
-    while not success:
-        if currentPos + 7 > 41:
-            board = board[:currentPos] + player + board[currentPos + 1:]
+    numTries = 0
+    while not success or numTries > 30:
+        randCol = random.randint(0, 6)  # Select a random column
+        column = columns[randCol]
+        # Find the first empty slot from the bottom of the column
+        emptySlot = column.find('-')
+        if emptySlot != -1:
+            # Calculate the index in the string
+            index = emptySlot * 7 + randCol
+            board = replacer(board, index, player)
             success = True
-            break
-        elif board[currentPos + 7] == '-':
-            currentPos += 7
-        elif board[currentPos] != '-':
-            randNum = (randNum + 1) % 7
-            currentPos = randNum
-            tries += 1
         else:
-            board = board[:currentPos] + player + board[currentPos + 1:]
-            success = True
+            # If the selected column is full, try another one
+            numTries += 1
+            continue
 
-        if tries > 7:
-            return flask.jsonify({
-                "error": "no_valid_move"
-            })
+    return flask.jsonify({'ID': id, 'Col': column, 'State': board})
 
-    return flask.jsonify({'ID': gameID, 'Col': randNum, 'State': board})
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 5127, debug=True)
+    app.run(host='0.0.0.0', port=5127, debug=True)
