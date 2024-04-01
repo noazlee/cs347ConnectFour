@@ -42,7 +42,7 @@ def newGame(player):
 
 
 @app.route('/nextmove/<gameID>/<oppCol>/<state>')
-def nextMove(gameID, oppCol, player, state):
+def nextMove(gameID, oppCol, state):
     board = state
     id = gameID
     oC = oppCol
@@ -54,6 +54,16 @@ def nextMove(gameID, oppCol, player, state):
             index = j * 7 + i
             column += board[index]
         columns.append(column)
+
+    # if oppCol is 3, nums would be
+    topBox = (6*6)+oppCol-1
+    for i in range(topBox, 0, -7):
+        boardBox = board[i]
+        if boardBox != '-':
+            if boardBox == 'X':
+                oppCol = 'X'
+            else:
+                oppCol = 'O'
 
     success = False
     numTries = 0
