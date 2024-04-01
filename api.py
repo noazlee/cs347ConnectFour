@@ -56,14 +56,14 @@ def nextMove(gameID, oppCol, state):
         columns.append(column)
 
     # if oppCol is 3, nums would be
-    topBox = (6*6)+oppCol-1
+    topBox = (6*6)+oC-1
     for i in range(topBox, 0, -7):
         boardBox = board[i]
         if boardBox != '-':
             if boardBox == 'X':
-                oppCol = 'X'
+                player = 'X'
             else:
-                oppCol = 'O'
+                player = 'O'
 
     success = False
     numTries = 0
