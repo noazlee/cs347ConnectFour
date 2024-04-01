@@ -45,7 +45,7 @@ def newGame(player):
 def nextMove(gameID, oppCol, state):
     board = state
     id = gameID
-    oC = oppCol
+    oC = int(oppCol)
     columns = []
 
     for i in range(7):  # 7 columns
