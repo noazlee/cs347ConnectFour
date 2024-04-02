@@ -1,4 +1,5 @@
 # This example shows you how to use the requests package to send test queries to an HTTP API.
+# Mary Blanchard, Warren Kozak, Noah Lee
 
 import requests
 
