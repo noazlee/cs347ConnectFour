@@ -13,17 +13,6 @@ existing_games = {}
 def replacer(s, index, newstring):
     return s[:index] + newstring + s[index+1:]
 
-
-def randomBoard():
-    egBoard = "-" * 42  # Initialize an empty board
-    numMoves = random.randint(0, 41)
-    players = ["X", "O"]
-    for i in range(numMoves):
-        player = players[i % 2]
-        egBoard = nextMove(player, egBoard)
-
-    return egBoard
-
 # New game
 
 
@@ -61,18 +50,18 @@ def nextMove(gameID, oppCol, state):
         boardBox = board[i]
         if boardBox != '-':
             if boardBox == 'X':
-                player = 'X'
+                player = 'O'  # if the last player's move was an X, set the current move as an O
             else:
-                player = 'O'
+                player = 'X'  # if the last player's move was an O, set the current move as an X
 
     success = False
     numTries = 0
-    while not success or numTries > 30:
-        randCol = random.randint(0, 6)  # Select a random column
+    while not success or numTries > 30:  # 30 is an arbitrary amount of tries
+        randCol = random.randint(0, 6)
         column = columns[randCol]
         # Find the first empty slot from the bottom of the column
         emptySlot = column.find('-')
-        if emptySlot != -1:
+        if emptySlot != -1:  # find returns -1 if it doesnt find anything
             # Calculate the index in the string
             index = emptySlot * 7 + randCol
             board = replacer(board, index, player)
