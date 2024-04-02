@@ -1,4 +1,5 @@
 # This code will generate a random, legal connect four table to test our flask app.
+# Mary Blanchard, Warren Kozak, Noah Lee
 
 import json
 import random
