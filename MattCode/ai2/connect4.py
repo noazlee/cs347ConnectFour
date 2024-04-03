@@ -79,5 +79,5 @@ def nextmove(gameID, oppCol, state):
 
 if __name__ == '__main__':
     host = 'localhost'
-    port = 5555
+    port = 5001
     app.run(host=host, port=port, debug=True)
