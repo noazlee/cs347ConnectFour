@@ -12,7 +12,7 @@ import urllib
 # IMPORTANT: Change these Host Names and Ports as needed
 # This should be the Ports (and host names) where the AI players are listening
 ai_one_url = "http://ai1:5000"
-ai_two_url = "http://ai2:5001"
+ai_two_url = "http://ai2:5000"
 
 max_gamenum = 1
 state_dict = {}

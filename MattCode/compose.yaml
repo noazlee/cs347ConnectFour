@@ -9,8 +9,12 @@ services:
         build: ./ai1
         expose:
           - "5000"
+        ports:
+          - "81:5000"
     ai2:
         build: ./ai2
         expose:
-          - "5001"
+          - "5000"
+        ports:
+          - "82:5000"
 
