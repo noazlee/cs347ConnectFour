@@ -1,5 +1,6 @@
 #! /usr/bin/python
 # A simple API endpoint to be used for a game of connect4
+# Mary Blanchard, Warren Kozak, Noah Lee
 
 import flask
 import random

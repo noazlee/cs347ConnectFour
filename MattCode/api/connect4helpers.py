@@ -1,4 +1,5 @@
 # Helper functions for connect 4 logic and board formatting
+# Mary Blanchard, Warren Kozak, Noah Lee
 
 def validboard(board:str):
     '''Validates that a board string is valid.'''
