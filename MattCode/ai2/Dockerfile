@@ -11,7 +11,7 @@ RUN pip install flask
 RUN pip install requests
 
 # We want port 5000 (the default Flask port) to be used outside the container
-EXPOSE 5000
+EXPOSE 5001
 
 # We copy everything in the current directory on our machine 
 # ... into the working directory in the container 
@@ -23,4 +23,4 @@ COPY . .
 #
 # CMD is almost always used to start a program that
 #    runs indefinitely and listens over the network for requests
-CMD ["python3", "connect4-server.py"]
+CMD ["python3", "connect4.py"]
