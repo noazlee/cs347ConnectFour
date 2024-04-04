@@ -1,8 +1,10 @@
 #! /usr/bin/python
 # A simple API endpoint to be used for a game of connect4
 # Noah, Warren, Mary
+# ai1
 
-import flask, random
+import flask
+import random
 
 app = flask.Flask(__name__)
 
@@ -10,6 +12,8 @@ app = flask.Flask(__name__)
 existing_games = {}
 
 # New game
+
+
 @app.route('/newgame/<player>')
 def newGame(player):
     waiting = True
@@ -22,10 +26,12 @@ def newGame(player):
             })
 
 # Existing game
+
+
 @app.route('/nextmove/<gameID>/<oppCol>/<state>')
 def nextMove(gameID, oppCol, state):
 
-    randNum = random.randint(0,6)
+    randNum = random.randint(0, 6)
     currentPos = randNum
     tries = 1
 
@@ -58,8 +64,8 @@ def nextMove(gameID, oppCol, state):
     else:
         player = 'X'
 
+    return flask.jsonify({'ID': gameID, 'col': randNum, 'state': player + "#" + board})
 
-    return flask.jsonify({'ID': gameID, 'Col': randNum, 'State': player + "#" + board})
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
