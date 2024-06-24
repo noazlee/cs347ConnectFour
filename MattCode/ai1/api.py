@@ -38,7 +38,7 @@ def nextMove(gameID, oppCol, state):
     oC = int(oppCol)
     columns = []
 
-    for i in range(10):  # 7 columns
+    for i in range(7):  # 7 columns
         column = ''
         for j in range(6):  # 6 rows
             index = j * 7 + i
